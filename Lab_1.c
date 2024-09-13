@@ -3,62 +3,61 @@
 #include <stdio.h>
 #include <locale.h>
 #include <time.h>
-#define MAX_STUDENTS 10
-
-
-typedef struct {
-    char lastName[20];
-    char firstName[20];
-    int age;
-    char group[10];
-} student;
-
-void print_students(student *found, int n) {
-    system("cls");
-    printf("Студентов найдено: %d\n", n);
-    for (int i = 0; i < n; ++i) {
-        printf("Фамилия: %s\n", found[i].lastName);
-        printf("Имя: %s\n", found[i].firstName);
-        printf("Возраст: %d\n", found[i].age);
-        printf("Группа: %s\n", found[i].group);
-    }
-}
+#define N 4
+#define M 5
 
 int main() {
-    setlocale(LC_ALL, "Rus");
+	setlocale(LC_ALL, "Rus");
+	srand(time(NULL));
+	int n;
+	printf("Введите размер массива: ");
+	scanf("%d", &n);
+	int* mas = (int*)malloc(sizeof(int) * n);
+	for (int i = 0; i < n; ++i) {
+		mas[i] = rand() % 200 - 100;
+		printf("%d ", mas[i]);
+	}
+	printf("\n");
+	int min = mas[0], max = mas[0];
+	for (int i = 0; i < n; ++i) {
+		max = max > mas[i] ? max : mas[i];
+		min = min > mas[i] ? mas[i] : min;
+	}
+	printf("Разница между максимальным (%d) и минимальным (%d) элементами массива: %d\n\n", max, min, max - min);
 
-    student* found_students = (student*)malloc(sizeof(student) * MAX_STUDENTS);
-    student students[MAX_STUDENTS] = {
-        {"Ivanov", "Ivan", 20, "23VVV1"},
-        {"Ivanov", "Ivan", 24, "23VVV4"},
-        {"Petrov", "Petr", 22, "23VVV3"},
-        {"Sidorov", "Sergey", 21, "23VVV1"},
-        {"Kuznetsov", "Andrey", 23, "23VVV2"},
-        {"Smirnov", "Alexey", 20, "23VVV3"},
-    };
+	int** mas2 = (int**)malloc(sizeof(int*) * N);
+	for (int i = 0; i < N; ++i) {
+		mas2[i] = (int*)malloc(sizeof(int) * M);
+	}
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < M; ++j) {
+			mas2[i][j] = rand() % 200 - 100;
+			printf("%4d ", mas2[i][j]);
+		}
+		printf("\n");
+	}
 
-    int n = sizeof(students) / sizeof(student);
+	printf("Суммы значений в каждой строке:\n");
+	for (int i = 0; i < N; ++i) {
+		int sum = 0;
+		for (int j = 0; j < M; ++j) {
+			sum += mas2[i][j];
+		}
+		printf("Строка %d: %d\n", i + 1, sum);
+	}
 
-    char targetLastName[20];
-    char targetFirstName[20];
+	printf("Суммы значений в каждом столбце:\n");
+	for (int j = 0; j < M; ++j) {
+		int sum = 0;
+		for (int i = 0; i < N; ++i) {
+			sum += mas2[i][j];
+		}
+		printf("Столбец %d: %d\n", j + 1, sum);
+	}
+	free(mas2);
 
-    printf("Введите фамилию: ");
-    scanf("%s", targetLastName);
-
-    printf("Введите имя: ");
-    scanf("%s", targetFirstName);
-
-
-    int found = 0;
-    for (int i = 0; i < n; ++i) {
-        if (strcmp(students[i].lastName, targetLastName) == 0 &&
-            strcmp(students[i].firstName, targetFirstName) == 0) {
-            *(found_students + found) = students[i];
-            found += 1;
-        }
-    }
-    print_students(found_students, found);
-    
-
-    return 0;
+	for (int i = 0; i < N; ++i) {
+		free(mas2[i]);
+	}
+	return 0;
 }
